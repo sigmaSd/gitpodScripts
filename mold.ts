@@ -32,7 +32,7 @@ export const installMold = async () => {
 
 [target.x86_64-unknown-linux-gnu]
 linker = "clang"
-rustflags = ["-C", "link-arg=-fuse-ld=${Deno.cwd()}/mold/bin/mold"]`,
+rustflags = ["-C", "link-arg=-fuse-ld=${Deno.cwd().trim()}/mold/bin/mold"]`,
     { append: true },
   );
 };

@@ -1,4 +1,4 @@
-import { $, $$, simpleRun } from "./deps.ts";
+import { $, $$, shellRun } from "./deps.ts";
 
 export const installMold = async () => {
   const releasePage = await fetch(
@@ -12,7 +12,11 @@ export const installMold = async () => {
   $$`wget -O mold.tar.gz ${moldUrl}`;
   $$`tar -xzf mold.tar.gz`;
   $$`rm mold.tar.gz`;
-  simpleRun("sh -c mv mold-*-x86_64-linux mold");
+  shellRun({
+    shell: "sh",
+    shellExecFlag: "-c",
+    cmd: "mv mold-*-x86_64-linux mold",
+  });
 
   $`mkdir .cargo`; // ignore exists error
 

@@ -8,7 +8,10 @@ export const installMold = async () => {
   const moldUrl = "https://github.com" +
     releasePage.match(/href="(.*mold-.*-x86_64-linux.tar.gz)"/)![1];
 
-  $`wget -O mold ${moldUrl}`;
+  $`wget -O mold.tar.gz ${moldUrl}`;
+  $`tar -xzf mold.tar.gz`;
+  $`rm mold.tar.gz`;
+  $`mv mold*-x86_64-linux/ mold`;
 
   $`mkdir .cargo`;
 

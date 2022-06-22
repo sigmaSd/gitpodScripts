@@ -1,4 +1,4 @@
-import { $, $t, simpleRun } from "./deps.ts";
+import { $, $$, simpleRun } from "./deps.ts";
 
 export const installMold = async () => {
   const releasePage = await fetch(
@@ -8,9 +8,10 @@ export const installMold = async () => {
   const moldUrl = "https://github.com" +
     releasePage.match(/href="(.*mold-.*-x86_64-linux.tar.gz)"/)![1];
 
-  $t`wget -O mold.tar.gz ${moldUrl}`;
-  $t`tar -xzf mold.tar.gz`;
-  $t`rm mold.tar.gz`;
+  $$.throws = true;
+  $$`wget -O mold.tar.gz ${moldUrl}`;
+  $$`tar -xzf mold.tar.gz`;
+  $$`rm mold.tar.gz`;
   simpleRun("sh -c mv mold-*-x86_64-linux mold");
 
   $`mkdir .cargo`; // ignore exists error
@@ -18,15 +19,20 @@ export const installMold = async () => {
   // cargo and cargo.toml are both valid
   // check if there is one already and use it
   let cargoConfig;
-  if ("./cargo/config".pathExists()) {
-    cargoConfig = "./cargo/config";
+  if ("./.cargo/config".pathExists()) {
+    cargoConfig = "./.cargo/config";
   } else {
     // default to cargo.toml
-    cargoConfig = "./cargo/config.toml";
+    cargoConfig = "./.cargo/config.toml";
   }
 
-  $t`echo 
-'[target.x86_64-unknown-linux-gnu]
+  Deno.writeTextFileSync(
+    cargoConfig,
+    `
+
+[target.x86_64-unknown-linux-gnu]
 linker = "clang"
-rustflags = ["-C", "link-arg=-fuse-ld=/workspace/deno/mold/bin/mold"]' >> ${cargoConfig}`;
+rustflags = ["-C", "link-arg=-fuse-ld=/workspace/deno/mold/bin/mold"]`,
+    { append: true },
+  );
 };

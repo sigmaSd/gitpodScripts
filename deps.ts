@@ -1,6 +1,7 @@
 export {
   $,
+  $$,
   $t,
   simpleRun,
-} from "https://deno.land/x/simple_shell@0.6.0/mod.ts";
-export {} from "https://deno.land/x/simple_shell@0.6.0/src/stringUtils.ts";
+} from "https://deno.land/x/simple_shell@0.7.0/mod.ts";
+export * as pathUtils from "https://deno.land/x/simple_shell@0.7.0/src/stringUtils.ts";

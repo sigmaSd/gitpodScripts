@@ -11,7 +11,7 @@ export const installMold = async () => {
   $`wget -O mold.tar.gz ${moldUrl}`;
   $`tar -xzf mold.tar.gz`;
   $`rm mold.tar.gz`;
-  $`mv mold*-x86_64-linux/ mold`;
+  $`mv mold-*-x86_64-linux/ mold`;
 
   $`mkdir .cargo`;
 

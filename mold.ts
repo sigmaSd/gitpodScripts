@@ -1,12 +1,15 @@
 import { $, $$, shellRun } from "./deps.ts";
 
 export const installMold = async () => {
-  const releasePage = await fetch(
+  const version = await fetch(
     "https://github.com/rui314/mold/releases/latest",
-  ).then((r) => r.text());
+  ).then((r) => r.url).then((u) => u.match(/(v.*)/)![1]);
 
-  const moldUrl = "https://github.com" +
-    releasePage.match(/href="(.*mold-.*-x86_64-linux.tar.gz)"/)![1];
+  //https://github.com/rui314/mold/releases/download/v1.4.2/mold-1.4.2-x86_64-linux.tar.gz
+  const moldUrl =
+    `https://github.com/rui314/mold/releases/download/${version}/mold-${
+      version.slice(1)
+    }-x86_64-linux.tar.gz`;
 
   $$.throws = true;
   $$`wget -O mold.tar.gz ${moldUrl}`;

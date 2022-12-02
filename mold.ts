@@ -1,4 +1,4 @@
-import { $, $$, shellRun } from "./deps.ts";
+import { $ } from "./deps.ts";
 
 export const installMold = async () => {
   const version = await fetch(
@@ -11,22 +11,19 @@ export const installMold = async () => {
       version.slice(1)
     }-x86_64-linux.tar.gz`;
 
-  $$.throws = true;
-  $$`wget -O mold.tar.gz ${moldUrl}`;
-  $$`tar -xzf mold.tar.gz`;
-  $$`rm mold.tar.gz`;
-  shellRun({
-    shell: "sh",
-    shellExecFlag: "-c",
-    cmd: "mv mold-*-x86_64-linux mold",
-  });
+  await $`wget -O mold.tar.gz ${moldUrl}`;
+  await $`tar -xzf mold.tar.gz`;
+  await $`rm mold.tar.gz`;
+  const downloadedMold =
+    $.fs.expandGlobSync("mold-*-x86_64-linux").next().value.name;
+  await $`mv  ${downloadedMold} mold`;
 
-  $`mkdir .cargo`; // ignore exists error
+  await $`mkdir .cargo`;
 
   // cargo and cargo.toml are both valid
   // check if there is one already and use it
   let cargoConfig;
-  if ("./.cargo/config".pathExists()) {
+  if ($.existsSync("./.cargo/config")) {
     cargoConfig = "./.cargo/config";
   } else {
     // default to cargo.toml

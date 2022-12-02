@@ -1,4 +1,4 @@
-import { $, CommandBuilder } from "./deps.ts";
+import { $ } from "./deps.ts";
 
 export const installMold = async () => {
   const version = await fetch(

@@ -17,11 +17,9 @@ export const installMold = async () => {
   await $`tar -xzf mold.tar.gz`;
   await $`rm mold.tar.gz`;
 
-  await $`ls`;
-
   const downloadedMold =
     $.fs.expandGlobSync("mold-*-x86_64-linux").next().value.name;
-  await $`mv  ${downloadedMold} mold`.printCommand();
+  await $`mv  ${downloadedMold} mold`;
 
   await new CommandBuilder().command(["mkdir", ".cargo"]).noThrow().spawn(); // ignore file exists
 

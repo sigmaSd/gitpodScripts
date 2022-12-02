@@ -11,9 +11,12 @@ export const installMold = async () => {
       version.slice(1)
     }-x86_64-linux.tar.gz`;
 
+  await $`rm mold`; // clean previous usage
+
   await $`wget -O mold.tar.gz ${moldUrl}`;
   await $`tar -xzf mold.tar.gz`;
   await $`rm mold.tar.gz`;
+
   const downloadedMold =
     $.fs.expandGlobSync("mold-*-x86_64-linux").next().value.name;
   await $`mv  ${downloadedMold} mold`;

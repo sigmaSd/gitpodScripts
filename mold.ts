@@ -21,7 +21,7 @@ export const installMold = async () => {
     $.fs.expandGlobSync("mold-*-x86_64-linux").next().value.name;
   await $`mv  ${downloadedMold} mold`;
 
-  await new CommandBuilder().command(["mkdir", ".cargo"]).noThrow().spawn(); // ignore file exists
+  await new CommandBuilder().command(["mkdir", ".cargo"]).noThrow().quiet().spawn(); // ignore file exists
 
   // cargo and cargo.toml are both valid
   // check if there is one already and use it

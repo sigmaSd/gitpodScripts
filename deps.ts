@@ -1,1 +1,1 @@
-export { $} from "https://deno.land/x/dax@0.15.0/mod.ts";
+export { $ } from "https://deno.land/x/dax@0.16.0/mod.ts";

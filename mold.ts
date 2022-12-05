@@ -5,20 +5,22 @@ export const installMold = async () => {
     "https://github.com/rui314/mold/releases/latest",
   ).then((r) => r.url).then((u) => u.match(/(v.*)/)![1]);
 
+  const targetName = `mold-*-${Deno.build.arch}-${Deno.build.os}.tar.gz`;
+
   //https://github.com/rui314/mold/releases/download/v1.4.2/mold-1.4.2-x86_64-linux.tar.gz
   const moldUrl =
-    `https://github.com/rui314/mold/releases/download/${version}/mold-${
-      version.slice(1)
-    }-x86_64-linux.tar.gz`;
+    `https://github.com/rui314/mold/releases/download/${version}/${
+      targetName.replace("*", version.slice(1))
+    }`;
 
-  await $`rm -rf mold`; // clean previous usage
+  await $`rm -rf mold`.quiet().noThrow(); // clean previous usage
 
   await $`wget -O mold.tar.gz ${moldUrl}`;
   await $`tar -xzf mold.tar.gz`;
   await $`rm mold.tar.gz`;
 
   const downloadedMold =
-    $.fs.expandGlobSync("mold-*-x86_64-linux").next().value.name;
+    $.fs.expandGlobSync(targetName.replace(".tar.gz", "")).next().value.name;
   await $`mv  ${downloadedMold} mold`;
 
   await $`mkdir .cargo`.noThrow().quiet(); // ignore file exists
@@ -37,7 +39,7 @@ export const installMold = async () => {
     cargoConfig,
     `
 
-[target.x86_64-unknown-linux-gnu]
+[target.${Deno.build.target}]
 linker = "clang"
 rustflags = ["-C", "link-arg=-fuse-ld=${Deno.cwd().trim()}/mold/bin/mold"]`, // for some reason trim is needed.
     { append: true },

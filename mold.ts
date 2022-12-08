@@ -1,7 +1,7 @@
 import { $ } from "./deps.ts";
 
 export const installMold = async () => {
-  if (Deno.build.os != "darwin") {
+  if (Deno.build.os != "linux") {
     throw `${Deno.build.os} unsuported by mold currently`;
   }
 

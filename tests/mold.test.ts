@@ -20,8 +20,7 @@ Deno.test("test mold", async () => {
   p2.close();
 
   assert(
-    (await Deno.run({ cmd: ["readelf", "-p", ".comment"] }).output().then((o) =>
-      new TextDecoder().decode(o)
-    )).includes("mold"),
+    (await Deno.run({ cmd: ["readelf", "-p", ".comment"], stdout: "piped" })
+      .output().then((o) => new TextDecoder().decode(o))).includes("mold"),
   );
 });

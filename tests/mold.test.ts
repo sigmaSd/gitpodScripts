@@ -18,4 +18,10 @@ Deno.test("test mold", async () => {
   });
   assert((await p2.status()).success);
   p2.close();
+
+  assert(
+    (await Deno.run({ cmd: ["readelf", "-p", ".comment"] }).output().then((o) =>
+      new TextDecoder().decode(o)
+    )).includes("mold"),
+  );
 });

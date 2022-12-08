@@ -1,9 +1,11 @@
 import { $ } from "./deps.ts";
 
 export const installMold = async () => {
-  const version = await fetch(
+  const req = await fetch(
     "https://github.com/rui314/mold/releases/latest",
-  ).then((r) => r.url).then((u) => u.match(/(v.*)/)![1]);
+  );
+  const version = req.url.match(/(v.*)/)![1];
+  await req.body?.cancel();
 
   const targetName = `mold-*-${Deno.build.arch}-${Deno.build.os}.tar.gz`;
 

@@ -1,6 +1,10 @@
 import { $ } from "./deps.ts";
 
 export const installMold = async () => {
+  if (Deno.build.os != "darwin") {
+    throw `${Deno.build.os} unsuported by mold currently`;
+  }
+
   const req = await fetch(
     "https://github.com/rui314/mold/releases/latest",
   );

@@ -17,7 +17,7 @@ export const installMold = async () => {
 
   await $`rm -rf mold`.quiet().noThrow(); // clean previous usage
 
-  await $`curl -o mold.tar.gz ${moldUrl}`;
+  await $`curl -L -o mold.tar.gz ${moldUrl}`.printCommand();
   await $`tar -xzf mold.tar.gz`;
   await $`rm mold.tar.gz`;
 

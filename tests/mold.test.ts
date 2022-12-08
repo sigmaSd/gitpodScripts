@@ -19,11 +19,14 @@ Deno.test("test mold", async () => {
   assert((await p2.status()).success);
   p2.close();
 
+  const p3 = Deno.run({
+    cmd: ["readelf", "-p", ".comment", "target/debug/tester"],
+    stdout: "piped",
+  });
   assert(
-    (await Deno.run({
-      cmd: ["readelf", "-p", ".comment", "target/debug/tester"],
-      stdout: "piped",
-    })
-      .output().then((o) => new TextDecoder().decode(o))).includes("mold"),
+    (await p3.output().then((o) => new TextDecoder().decode(o))).includes(
+      "mold",
+    ),
   );
+  p3.close();
 });

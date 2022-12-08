@@ -36,9 +36,11 @@ jobs:
 
       # Uncomment this step to verify the use of 'deno fmt' on each commit.
       - name: Verify formatting
+        if: runner.os == 'Linux'
         run: deno fmt --check
 
       - name: Run linter
+        if: runner.os == 'Linux'
         run: deno lint
 
       - name: Run tests

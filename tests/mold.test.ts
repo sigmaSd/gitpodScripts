@@ -5,11 +5,11 @@ Deno.test("test mold", async () => {
   const dir = Deno.makeTempDirSync();
   Deno.chdir(dir);
 
-  const p = Deno.run({ cmd: ["cargo", "new", "mold"] });
+  const p = Deno.run({ cmd: ["cargo", "new", "tester"] });
   await p.status();
   p.close();
 
-  Deno.chdir("mold");
+  Deno.chdir("tester");
 
   await installMold();
 
@@ -20,7 +20,10 @@ Deno.test("test mold", async () => {
   p2.close();
 
   assert(
-    (await Deno.run({ cmd: ["readelf", "-p", ".comment"], stdout: "piped" })
+    (await Deno.run({
+      cmd: ["readelf", "-p", ".comment", "target/debug/tester"],
+      stdout: "piped",
+    })
       .output().then((o) => new TextDecoder().decode(o))).includes("mold"),
   );
 });

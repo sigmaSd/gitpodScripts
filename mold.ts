@@ -1,15 +1,16 @@
 import { $ } from "./deps.ts";
 
 export const installMold = async () => {
-  if (Deno.build.os != "linux") {
+  if (Deno.build.os !== "linux") {
     throw `${Deno.build.os} unsuported by mold currently`;
   }
 
   const req = await fetch(
     "https://github.com/rui314/mold/releases/latest",
   );
-  const version = req.url.match(/(v.*)/)![1];
+  const version = req.url.match(/(v.*)/)?.at(1);
   await req.body?.cancel();
+  if (!version) throw new Error("could not determine mold version");
 
   const targetName = `mold-*-${Deno.build.arch}-${Deno.build.os}.tar.gz`;
 
@@ -25,16 +26,19 @@ export const installMold = async () => {
   await $`tar -xzf mold.tar.gz`;
   await $`rm mold.tar.gz`;
 
-  const downloadedMold =
-    $.fs.expandGlobSync(targetName.replace(".tar.gz", "")).next().value.name;
+  const downloadedMold = $.path(".").expandGlobSync(
+    targetName.replace(".tar.gz", ""),
+  ).next().value
+    ?.name;
+  if (!downloadedMold) throw new Error("failed to download mold");
   await $`mv  ${downloadedMold} mold`;
 
   await $`mkdir .cargo`.noThrow().quiet(); // ignore file exists
 
   // cargo and cargo.toml are both valid
   // check if there is one already and use it
-  let cargoConfig;
-  if ($.existsSync("./.cargo/config")) {
+  let cargoConfig: string;
+  if ($.path("./.cargo/config").existsSync()) {
     cargoConfig = "./.cargo/config";
   } else {
     // default to cargo.toml
